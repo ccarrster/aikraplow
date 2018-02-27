@@ -90,6 +90,10 @@ class MySQLApiStorage implements iApiStorage{
 
 		}
 		mysqli_close($link);
-		return $result;
+		$cleanResult = [];
+		foreach($result as $resultItem){
+			$cleanResult[] = $resultItem;
+		}
+		return $cleanResult;
 	}
 }
