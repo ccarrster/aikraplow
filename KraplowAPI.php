@@ -62,6 +62,10 @@ class KraplowAPI{
 		return $result;
 	}
 
+	function getGames($state = null){
+		return $this->apiStorage->getGames($state);
+	}
+
 	function handleAction(){
 		if(isset($_GET['action'])){
 			$action = $_GET['action'];
@@ -82,6 +86,15 @@ class KraplowAPI{
 					$result = "Bad API Call - Missing required fields gameid, clientid";
 				}
 				echo(json_encode($result));
+			} elseif($action == "getgames"){
+				if(isset($_GET["state"])){
+					$result = $this->getGames($_GET["state"]);
+				} else {
+					$result = $this->getGames();
+				}
+				echo(json_encode($result));
+			} else {
+				echo(json_encode("Action not supported"));
 			}
 		}
 	}

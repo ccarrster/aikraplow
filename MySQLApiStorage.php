@@ -63,4 +63,23 @@ class MySQLApiStorage implements iApiStorage{
 		mysqli_close($link);
 		return $result;
 	}
+
+	function getGames($state = null){
+		$result = [];
+		$link = $this->openDBConnection();
+		if($state != null){
+			$query = "SELECT id, state FROM game WHERE state = '".mysqli_real_escape_string($link, $state)."';";
+		} else {
+			$query = "SELECT id, state FROM game;";
+		}
+		$queryResult = mysqli_query($link, $query);
+		while ($row = mysqli_fetch_row($queryResult)){
+			$game = [];
+			$game["id"] = $row[0];
+			$game["state"] = $row[1];
+			$result[] = $game;
+		}
+		mysqli_close($link);
+		return $result;
+	}
 }

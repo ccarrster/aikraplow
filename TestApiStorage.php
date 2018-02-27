@@ -63,4 +63,18 @@ class TestApiStorage implements iApiStorage{
 			}
 		}
 	}
+
+	function getGames($state = null){
+		$result = [];
+		foreach($this->games as $game){
+			if($state != null){
+				if($game["state"] == $state){
+					$result[] = $game;
+				}
+			} else {
+				$result[] = $game;
+			}
+		}
+		return $result;
+	}
 }

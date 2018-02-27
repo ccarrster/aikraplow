@@ -9,6 +9,7 @@ require_once("TestApiStorage.php");
 final class APITest extends TestCase
 {
 	 public function testCreateGame(){
+	 	unset($_GET);
 	 	$testStorage = new TestApiStorage();
 		$sut = new KraplowAPI($testStorage);
 		$_GET["action"] = "newgame";
@@ -23,6 +24,7 @@ final class APITest extends TestCase
 	 }
 
 	 public function testJoinGame(){
+	 	unset($_GET);
 		$testStorage = new TestApiStorage();
 		$sut = new KraplowAPI($testStorage);
 		$_GET["action"] = "newgame";
@@ -50,6 +52,7 @@ final class APITest extends TestCase
 	 }
 
 	 public function testLeaveGame(){
+	 	unset($_GET);
 		$testStorage = new TestApiStorage();
 		$sut = new KraplowAPI($testStorage);
 		$_GET["action"] = "newgame";
@@ -67,6 +70,7 @@ final class APITest extends TestCase
 	 }
 
 	 public function testLeaveGameWrongId(){
+	 	unset($_GET);
 		$testStorage = new TestApiStorage();
 		$sut = new KraplowAPI($testStorage);
 		$_GET["action"] = "newgame";
@@ -106,5 +110,37 @@ final class APITest extends TestCase
 		$this->assertEquals(0, count($testStorage->games[0]["clients"]));
 		$sut->handleAction();
 		$this->assertEquals(0, count($testStorage->games[0]["clients"]));
+	 }
+
+	 public function testGetAllGames(){
+	 	unset($_GET);
+	 	$testStorage = new TestApiStorage();
+		$sut = new KraplowAPI($testStorage);
+		$_GET["action"] = "getgames";
+		$_GET["state"] = "new";
+		ob_start();
+		$sut->handleAction();
+		$output = ob_get_flush();
+		$this->assertEquals(0, count(json_decode($output)));
+		$_GET["action"] = "newgame";
+		$sut->handleAction();
+		$_GET["action"] = "getgames";
+		$_GET["state"] = "new";
+		ob_start();
+		$sut->handleAction();
+		$output = ob_get_flush();
+		$this->assertEquals(1, count(json_decode($output)));
+		$_GET["action"] = "getgames";
+		$_GET["state"] = "playing";
+		ob_start();
+		$sut->handleAction();
+		$output = ob_get_flush();
+		$this->assertEquals(0, count(json_decode($output)));
+		unset($_GET);
+		$_GET["action"] = "getgames";
+		ob_start();
+		$sut->handleAction();
+		$output = ob_get_flush();
+		$this->assertEquals(1, count(json_decode($output)));
 	 }
 }
