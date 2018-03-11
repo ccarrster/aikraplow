@@ -93,6 +93,21 @@ class KraplowAPI{
 					$result = $this->getGames();
 				}
 				echo(json_encode($result));
+			} elseif($action == "newclient"){
+				$name = null;
+				if(isset($_GET["name"])){
+					$name = $_GET["name"];
+				}
+				echo(json_encode($this->apiStorage->createClient($name)));
+			} elseif($action == "startgame"){
+				$gameId = $_GET["gameid"];
+				$gameState = $this->apiStorage->getGameState($gameId);
+				if($gameState == "new"){
+					$this->apiStorage->setGameState($gameId, "playing");
+					echo(json_encode(true));
+				} else {
+					echo(json_encode("Can not start game"));
+				}
 			} else {
 				echo(json_encode("Action not supported"));
 			}

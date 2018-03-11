@@ -5,6 +5,8 @@ require_once("iApiStorage.php");
 class TestApiStorage implements iApiStorage{
 
 	var $games = [];
+	var $clients = [];
+	var $clientIndex = 0;
 
 	function createGame(){
 		$game = [];
@@ -76,5 +78,14 @@ class TestApiStorage implements iApiStorage{
 			}
 		}
 		return $result;
+	}
+
+	function createClient($name = null){
+		if($name != null && isset($clients[$name])){
+			return false;
+		}
+		$this->clientIndex += 1;
+		$clients[$this->clientIndex] = $name;
+		return $this->clientIndex;
 	}
 }

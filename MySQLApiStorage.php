@@ -96,4 +96,36 @@ class MySQLApiStorage implements iApiStorage{
 		}
 		return $cleanResult;
 	}
+
+	function createClient($name = null){
+		$link = $this->openDBConnection();
+		if($name == null){
+			$query = "INSERT INTO client () values()";
+			mysqli_query($link, $query);
+			$clientId = mysqli_insert_id($link);
+		} else {
+			$nameExistsQuery = "SELECT id FROM client WHERE name = '".mysqli_real_escape_string($link, $name)."'";
+			$result = mysqli_query($link, $nameExistsQuery);
+			$existingName = null;
+			while ($row = mysqli_fetch_row($result)){
+				$existingName = $row[0];
+			}
+			if($existingName == null){
+				$query = "INSERT INTO client (name) values('".mysqli_real_escape_string($link, $name)."')";
+				mysqli_query($link, $query);
+				$clientId = mysqli_insert_id($link);
+			} else {
+				$clientId = false;
+			}
+		}
+		mysqli_close($link);
+		return $clientId;
+	}
+
+	function setGameState($gameId, $state){
+		$link = $this->openDBConnection();
+		$query = "UPDATE game SET state = '".mysqli_real_escape_string($link, $state)."' WHERE id = ".mysqli_real_escape_string($link, $gameId);
+		mysqli_close($link);
+	}
+
 }

@@ -8,6 +8,8 @@ interface iAPIStorage
 	function addClientToGame($gameId, $clientId);
 	function removeClientFromGame($gameId, $clientId);
 	function getGames($state);
+	function createClient($name);
+	function setGameState($gameId, $gameState);
 
 }
 ?>
